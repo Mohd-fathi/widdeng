@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوة زفاف | Wedding Invitation</title>
+    <!-- Arabic Google Fonts: Amiri for elegant serif, Cairo for clean sans-serif -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === CSS VARIABLES === */
+        :root {
+            --red-deep: #4A0404;
+            --red-bright: #8B0000;
+            --gold: #D4AF37;
+            --gold-light: #F9E596;
+            --black: #111111;
+            --white: #FDFBF7;
+            --font-title: 'Amiri', serif;
+            --font-body: 'Cairo', sans-serif;
+        }
+
+        /* === GLOBAL RESET & STYLES === */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html {
+            width: 100%; height: 100%;
+            background-color: var(--black);
+            font-family: var(--font-body);
+            color: var(--gold);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, #2a0202 0%, #000000 100%);
+        }
+
+        /* === AUDIO CONTROLS === */
+        #audio-controls {
+            position: fixed; top: 20px; left: 20px;
+            z-index: 1000; display: none;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--gold);
+            border-radius: 50px; padding: 10px 15px;
+            color: var(--gold); cursor: pointer;
+            font-family: var(--font-body); font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        #audio-controls:hover { background: var(--gold); color: var(--black); }
+
+        /* === LANDING PAGE & 3D ENVELOPE === */
+        #landing {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column; z-index: 500;
+            transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+        }
+        
+        .click-instruction {
+            margin-top: 40px; font-family: var(--font-title);
+            font-size: 1.5rem; letter-spacing: 2px;
+            animation: pulseText 2s infinite; text-shadow: 0 0 10px var(--gold);
+        }
+
+        /* Envelope Container */
+        .envelope-wrapper {
+            position: relative; width: 320px; height: 220px;
+            perspective: 1200px; cursor: pointer;
+        }
+        
+        /* The Envelope Base */
+        .envelope {
+            position: relative; width: 100%; height: 100%;
+            transform-style: preserve-3d; transition: transform 1s ease;
+        }
+        .envelope-back {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--red-deep); border: 2px solid var(--gold);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8); z-index: 1;
+        }
+        /* The Invitation Card inside */
+        .envelope-card {
+            position: absolute; bottom: 5px; left: 10px; right: 10px; height: 200px;
+            background: var(--white);
+            border: 2px solid var(--gold);
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212,175,55,0.05) 10px, rgba(212,175,55,0.05) 20px);
+            z-index: 2; transition: transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) 0.6s;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .envelope-card-inner {
+            font-family: var(--font-title); color: var(--red-deep);
+            font-size: 1.5rem; text-align: center; font-weight: bold;
+        }
+        /* The Envelope Front Pocket */
+        .envelope-front {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3; pointer-events: none;
+            background: linear-gradient(135deg, var(--red-bright) 0%, var(--red-deep) 100%);
+            clip-path: polygon(0 0, 50% 50%, 100% 0, 100% 100%, 0 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        /* The Flap */
+        .envelope-flap {
+            position: absolute; top: 0; left: 0; width: 100%; height: 120px;
+            background: linear-gradient(to bottom, var(--red-bright), var(--red-deep));
+            clip-path: polygon(0 0, 100% 0, 50% 100%); z-index: 4;
+            transform-origin: top; transition: transform 0.8s ease, z-index 0s 0.4s;
+            border-top: 2px solid var(--gold);
+        }
+
+        /* Envelope Open Animation State */
+        .envelope-wrapper.open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+        .envelope-wrapper.open .envelope-card { transform: translateY(-160px); }
+
+        /* === MAIN INVITATION CONTENT === */
+        #invitation {
+            display: none; opacity: 0; transform: scale(0.95);
+            transition: opacity 2s ease, transform 2s ease;
+            position: relative; z-index: 10;
+            padding: 40px 20px; max-width: 800px; margin: 0 auto;
+        }
+        #invitation.show { opacity: 1; transform: scale(1); }
+
+        /* Sudanese Decor Frame */
+        .frame {
+            border: 2px solid var(--gold); outline: 1px solid var(--gold);
+            outline-offset: 8px; padding: 40px 20px;
+            background: rgba(26, 26, 26, 0.85);
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
+            position: relative; backdrop-filter: blur(5px);
+        }
+        /* Corner Ornaments */
+        .corner {
+            position: absolute; width: 40px; height: 40px;
+            border: 3px solid var(--gold);
+        }
+        .corner-tl { top: -10px; right: -10px; border-bottom: none; border-left: none; }
+        .corner-tr { top: -10px; left: -10px; border-bottom: none; border-right: none; }
+        .corner-bl { bottom: -10px; right: -10px; border-top: none; border-left: none; }
+        .corner-br { bottom: -10px; left: -10px; border-top: none; border-right: none; }
+
+        /* Text Styles */
+        h1, h2, h3 { font-family: var(--font-title); text-align: center; font-weight: normal;}
+        .bismillah { font-size: 2rem; margin-bottom: 20px; text-shadow: 0 0 10px rgba(212,175,55,0.5); }
+        .guest-name { font-size: 1.8rem; margin: 20px 0; color: var(--white); text-align: center;}
+        .intro-text { text-align: center; font-size: 1.2rem; line-height: 1.8; margin-bottom: 30px; }
+        
+        .couple-names {
+            font-size: 3.5rem; color: var(--gold); margin: 20px 0;
+            text-shadow: 0 0 15px rgba(212,175,55,0.6); text-align: center;
+        }
+
+        /* SVG Sudanese Couple Container */
+        .couple-illustration {
+            width: 200px; height: 200px; margin: 0 auto 30px;
+            display: block; filter: drop-shadow(0 0 10px rgba(212,175,55,0.3));
+        }
+
+        /* Event Details */
+        .details { text-align: center; margin-top: 40px; padding-top: 30px; border-top: 1px dashed var(--gold); }
+        .details p { font-size: 1.3rem; margin: 10px 0; }
+        .details .highlight { color: var(--white); font-weight: bold; font-size: 1.5rem; }
+
+        /* Countdown */
+        .countdown {
+            display: flex; justify-content: center; gap: 15px; margin: 40px 0; direction: ltr;
+        }
+        .time-box {
+            background: var(--red-deep); border: 1px solid var(--gold);
+            padding: 15px; width: 80px; text-align: center; border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .time-box span { display: block; font-size: 2rem; font-family: var(--font-title); font-weight: bold; }
+        .time-box small { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold-light); }
+
+        /* RSVP Buttons */
+        .rsvp-section { text-align: center; margin-top: 40px; }
+        .btn {
+            display: inline-block; padding: 12px 30px; margin: 10px;
+            background: transparent; border: 2px solid var(--gold);
+            color: var(--gold); text-decoration: none; font-size: 1.2rem;
+            font-family: var(--font-title); cursor: pointer;
+            transition: all 0.3s; position: relative; overflow: hidden;
+            border-radius: 4px;
+        }
+        .btn:hover { background: var(--gold); color: var(--black); box-shadow: 0 0 20px var(--gold); }
+        .btn-maps { border-color: var(--white); color: var(--white); }
+        .btn-maps:hover { background: var(--white); color: var(--black); box-shadow: 0 0 20px var(--white); }
+
+        /* Falling Flowers Animation */
+        .flower {
+            position: fixed; top: -10%; z-index: 1;
+            user-select: none; pointer-events: none;
+            animation: fall linear forwards;
+            font-size: 1.5rem; filter: drop-shadow(0 0 5px rgba(255,192,203,0.5));
+        }
+
+        /* Keyframes */
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes fall {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            100% { transform: translate(100px, 110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .couple-names { font-size: 2.5rem; }
+            .countdown { gap: 10px; flex-wrap: wrap; }
+            .time-box { width: 70px; padding: 10px; }
+            .time-box span { font-size: 1.5rem; }
+            .frame { padding: 30px 15px; outline-offset: 4px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Optional Audio element (Replace src with actual valid wedding music URL if deploying) -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-wedding-march-12.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="audio-controls" onclick="toggleAudio()">
+        🔊 إيقاف الصوت
+    </div>
+
+    <!-- Falling Flowers Container -->
+    <div id="flower-container"></div>
+
+    <!-- 1. LANDING PAGE (3D ENVELOPE) -->
+    <div id="landing">
+        <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+            <div class="envelope">
+                <div class="envelope-back"></div>
+                <div class="envelope-card">
+                    <div class="envelope-card-inner">
+                        أفراح آل فتحي عبده احمد <br>You're Invited
+                    </div>
+                </div>
+                <div class="envelope-front"></div>
+                <div class="envelope-flap"></div>
+            </div>
+        </div>
+        <div class="click-instruction">اضغط لفتح الدعوة</div>
+    </div>
+
+    <!-- 2. MAIN INVITATION CONTENT -->
+    <div id="invitation">
+        <div class="frame">
+            <!-- Corner Ornaments -->
+            <div class="corner corner-tl"></div>
+            <div class="corner corner-tr"></div>
+            <div class="corner corner-bl"></div>
+            <div class="corner corner-br"></div>
+
+            <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+            
+            <div class="guest-name" id="guest-name-display"></div>
+
+            <p class="intro-text">
+                بكل الحب والود، تتشرف عائلتا العروسين بدعوتكم لحضور حفل الزفاف ومشاركتنا فرحتنا الكبرى.
+            </p>
+
+            <!-- Authentic Sudanese Illustration (SVG) -->
+            <!-- Minimalist vector of Groom in Jalabiya/Imma & Bride in Tobe -->
+            <svg class="couple-illustration" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Groom (Right side natively, Left side visually) -->
+                <g transform="translate(40, 30)">
+                    <!-- Groom Imma (Turban) -->
+                    <path d="M40 30 C30 20, 50 10, 60 20 C70 10, 90 20, 80 30 C95 35, 90 50, 75 55 C65 60, 55 60, 45 55 C30 50, 25 35, 40 30 Z" fill="#FDFBF7"/>
+                    <!-- Groom Head -->
+                    <circle cx="60" cy="50" r="12" fill="#5A3A22"/>
+                    <!-- Groom Jalabiya -->
+                    <path d="M45 70 L75 70 L95 160 L25 160 Z" fill="#FDFBF7"/>
+                    <path d="M60 70 L60 110" stroke="#D4AF37" stroke-width="1.5"/>
+                </g>
+                <!-- Bride (Left side natively, Right side visually) -->
+                <g transform="translate(-20, 40)">
+                    <!-- Bride Tobe Drapes (Rich Red & Gold) -->
+                    <path d="M120 40 C100 40, 90 60, 95 80 C90 120, 85 150, 80 160 L140 160 C145 140, 150 100, 145 70 C145 50, 135 40, 120 40 Z" fill="#8B0000"/>
+                    <path d="M120 40 C100 40, 90 60, 95 80 C90 120, 85 150, 80 160 L140 160 C145 140, 150 100, 145 70 C145 50, 135 40, 120 40 Z" fill="none" stroke="#D4AF37" stroke-width="2"/>
+                    <!-- Bride Head (partially covered by Tobe) -->
+                    <circle cx="118" cy="50" r="10" fill="#5A3A22"/>
+                    <!-- Tobe wrapping overlay -->
+                    <path d="M100 70 C110 90, 130 110, 145 100" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity="0.7"/>
+                    <path d="M95 100 C110 120, 120 140, 135 130" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity="0.7"/>
+                </g>
+                <!-- Gold sparkles around -->
+                <circle cx="30" cy="30" r="2" fill="#D4AF37"/>
+                <circle cx="160" cy="50" r="3" fill="#D4AF37"/>
+                <circle cx="100" cy="10" r="2" fill="#D4AF37"/>
+                <circle cx="40" cy="140" r="1.5" fill="#D4AF37"/>
+            </svg>
+
+            <h1 class="couple-names">محمد & فاطمة</h1>
+
+            <div class="countdown" id="countdown">
+                <div class="time-box"><span id="days">00</span><small>يوم</small></div>
+                <div class="time-box"><span id="hours">00</span><small>ساعة</small></div>
+                <div class="time-box"><span id="minutes">00</span><small>دقيقة</small></div>
+                <div class="time-box"><span id="seconds">00</span><small>ثانية</small></div>
+            </div>
+
+            <div class="details">
+                <p>يوم الخميس الموافق</p>
+                <p class="highlight">15 أكتوبر 2026</p>
+                <p>في تمام الساعة الثامنة مساءً</p>
+                <p>صالة ليالي السعد - الخرطوم</p>
+                
+                <br>
+                <a href="https://maps.google.com" target="_blank" class="btn btn-maps">📍 عرض الموقع على الخريطة</a>
+            </div>
+
+            <div class="rsvp-section">
+                <h3>تأكيد الحضور (RSVP)</h3>
+                <p style="margin: 15px 0;">نرجو تأكيد حضوركم عبر الواتساب:</p>
+                <!-- WhatsApp links generated dynamically via JS -->
+                <a href="#" id="btn-attend" class="btn">سأحضر بالتأكيد ✔️</a>
+                <a href="#" id="btn-decline" class="btn" style="border-color: #555; color: #aaa;">أعتذر عن الحضور ✖️</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- === JAVASCRIPT === -->
+    <script>
+        // 1. URL Parameter Personalization
+        const urlParams = new URLSearchParams(window.location.search);
+        const guestName = urlParams.get('name');
+        const nameDisplay = document.getElementById('guest-name-display');
+        
+        if (guestName) {
+            // Clean injection
+            nameDisplay.textContent = `إلى الغالي/ة: ${guestName}`;
+        } else {
+            nameDisplay.textContent = `إلى ضيفنا الكريم`;
+        }
+
+        // 2. RSVP WhatsApp Setup
+        // Replace '1234567890' with the actual phone number including country code
+        const phoneNumber = "249997599917"; 
+        const attendMsg = guestName 
+            ? `مرحباً، أنا ${guestName} وأؤكد حضوري لحفل الزفاف. ألف مبروك!` 
+            : `مرحباً، أؤكد حضوري لحفل الزفاف. ألف مبروك!`;
+        const declineMsg = guestName 
+            ? `مرحباً، أنا ${guestName}. أعتذر عن عدم تمكني من الحضور، أتمنى لكم حياة سعيدة وألف مبروك.` 
+            : `مرحباً، أعتذر عن عدم تمكني من الحضور، أتمنى لكم حياة سعيدة.`;
+
+        document.getElementById('btn-attend').href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(attendMsg)}`;
+        document.getElementById('btn-decline').href = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(declineMsg)}`;
+
+        // 3. Envelope & Cinematic Transition Logic
+        let envelopeOpened = false;
+        const audio = document.getElementById('bg-music');
+        const audioControls = document.getElementById('audio-controls');
+
+        function openEnvelope() {
+            if (envelopeOpened) return;
+            envelopeOpened = true;
+
+            const wrapper = document.getElementById('envelope');
+            wrapper.classList.add('open');
+
+            // Attempt to play music
+            audio.play().then(() => {
+                audioControls.style.display = 'block';
+            }).catch(e => {
+                console.log("Audio autoplay blocked by browser until user interacts further.", e);
+            });
+
+            // Cinematic fade transition
+            setTimeout(() => {
+                const landing = document.getElementById('landing');
+                landing.style.transform = 'scale(1.5)';
+                landing.style.opacity = '0';
+                
+                setTimeout(() => {
+                    landing.style.display = 'none';
+                    const invitation = document.getElementById('invitation');
+                    invitation.style.display = 'block';
+                    
+                    // Trigger reflow
+                    void invitation.offsetWidth;
+                    
+                    invitation.classList.add('show');
+                    startFlowerAnimation();
+                }, 1500); // Wait for fade out
+            }, 1500); // Wait for envelope to open and card to slide out
+        }
+
+        // 4. Audio Control Toggle
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                audioControls.textContent = '🔊 إيقاف الصوت';
+            } else {
+                audio.pause();
+                audioControls.textContent = '🔇 تشغيل الصوت';
+            }
+        }
+
+        // 5. Countdown Timer Logic
+        // Set wedding date here (Year, Month index [0-11], Day, Hour, Min)
+        const weddingDate = new Date(2026, 6, 5, 20, 0, 0).getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = "<h3 style='color: var(--white);'>تم الزفاف بفضل الله!</h3>";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // 6. Falling Flowers (Petals) Animation
+        function startFlowerAnimation() {
+            const container = document.getElementById('flower-container');
+            const petals = ['🌸', '✨', '🤍', '🍂']; 
+            
+            setInterval(() => {
+                if(document.visibilityState !== 'visible') return;
+
+                const flower = document.createElement('div');
+                flower.classList.add('flower');
+                // Randomly select a symbol
+                flower.innerText = petals[Math.floor(Math.random() * petals.length)];
+                
+                // Randomization
+                flower.style.left = Math.random() * 100 + 'vw';
+                flower.style.animationDuration = Math.random() * 5 + 5 + 's'; // 5s to 10s
+                flower.style.fontSize = Math.random() * 10 + 15 + 'px'; // 15px to 25px
+                
+                container.appendChild(flower);
+
+                // Remove from DOM after animation completes
+                setTimeout(() => {
+                    flower.remove();
+                }, 10000);
+            }, 600); // Spawn a new petal every 600ms
+        }
+    </script>
+</body>
+</html>
