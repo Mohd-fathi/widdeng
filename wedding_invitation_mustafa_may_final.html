@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#12090b">
+<meta name="description" content="دعوة زفاف مصطفى ومي">
+<title>دعوة زفاف | مصطفى & مي</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#12090b;
+  --wine:#4b0d14;
+  --wine2:#741722;
+  --gold:#c9a44c;
+  --gold-light:#f1dc91;
+  --cream:#fbf6ea;
+  --text:#eadbc2;
+  --muted:#aa9884;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;
+  color:var(--text);
+  font-family:"Cairo",sans-serif;
+  background:
+    radial-gradient(circle at 50% 15%,#4c101b 0,transparent 35%),
+    radial-gradient(circle at 20% 85%,#321017 0,transparent 30%),
+    var(--bg);
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;pointer-events:none;opacity:.09;
+  background-image:
+    linear-gradient(45deg,transparent 45%,var(--gold) 46%,var(--gold) 54%,transparent 55%),
+    linear-gradient(-45deg,transparent 45%,var(--gold) 46%,var(--gold) 54%,transparent 55%);
+  background-size:34px 34px;
+  mask-image:linear-gradient(to bottom,#000,transparent 80%);
+}
+button,a{font:inherit}
+button{border:0}
+
+/* ===== شاشة البداية ===== */
+#landing{
+  position:fixed;inset:0;z-index:100;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:
+    radial-gradient(circle at center,#3b0d15 0,#1b080d 48%,#0d0607 100%);
+  transition:opacity 1s ease,transform 1s ease;
+}
+.landing-content{text-align:center}
+.brand-small{
+  font-family:Amiri,serif;color:var(--gold-light);
+  font-size:1.15rem;margin-bottom:24px;
+}
+.envelope-wrapper{
+  position:relative;width:min(390px,84vw);aspect-ratio:1.5;
+  perspective:1400px;cursor:pointer;outline:none;
+}
+.envelope{
+  position:absolute;inset:0;transform-style:preserve-3d;
+  filter:drop-shadow(0 30px 45px #000b);
+}
+.envelope-back{
+  position:absolute;inset:0;border:1px solid var(--gold);
+  border-radius:4px;
+  background:
+    radial-gradient(circle at 50% 40%,#851b29 0,#5a1019 42%,#31080e 100%);
+  box-shadow:inset 0 0 55px #160407;
+}
+.envelope-back::after{
+  content:"";position:absolute;inset:13px;
+  border:1px solid #d7b75d66;
+  background:repeating-linear-gradient(45deg,transparent 0 12px,#d7b75d09 13px 14px);
+}
+.envelope-card{
+  position:absolute;left:7%;right:7%;bottom:3%;height:91%;z-index:2;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  background:var(--cream);color:var(--wine);
+  border:1px solid var(--gold);
+  box-shadow:0 8px 30px #0008;
+  transition:transform 1.15s cubic-bezier(.2,.8,.2,1) .22s;
+}
+.envelope-card::before{content:"";position:absolute;inset:12px;border:1px solid var(--gold)}
+.card-content{position:relative;z-index:1;font-family:Amiri,serif;line-height:1.5}
+.card-content .family{font-size:1.15rem}
+.card-content .names{display:block;font-size:2.45rem;font-weight:700;margin:4px 0}
+.card-content .line{font-size:1rem}
+.envelope-front{
+  position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:linear-gradient(145deg,#8b1c2a,#4a0b12);
+  clip-path:polygon(0 0,50% 54%,100% 0,100% 100%,0 100%);
+  border:1px solid #c9a44c44;
+}
+.envelope-flap{
+  position:absolute;top:0;left:0;width:100%;height:56%;z-index:5;
+  background:linear-gradient(160deg,#8e1e2b,#4b0b12);
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  transform-origin:top;
+  transition:transform .85s ease,z-index 0s .4s;
+  border-top:1px solid var(--gold);
+}
+.seal{
+  position:absolute;z-index:8;top:49%;left:50%;
+  width:68px;height:68px;transform:translate(-50%,-50%);
+  border-radius:50%;display:grid;place-items:center;text-align:center;
+  color:#421016;background:radial-gradient(circle,#f1dc91,#b98c31);
+  border:3px double #684716;box-shadow:0 7px 20px #0009;
+  font:700 .92rem/1.05 Amiri,serif;
+  transition:.4s;
+}
+.envelope-wrapper.open .envelope-flap{transform:rotateX(180deg);z-index:1}
+.envelope-wrapper.open .envelope-card{transform:translateY(-63%)}
+.envelope-wrapper.open .seal{opacity:0;transform:translate(-50%,-50%) scale(.5)}
+.open-text{
+  margin-top:34px;font:1.35rem Amiri,serif;color:var(--gold-light);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{50%{opacity:.45}}
+
+/* ===== زر الصوت ===== */
+#audio-control{
+  position:fixed;top:16px;left:16px;z-index:90;
+  display:none;align-items:center;gap:8px;
+  color:var(--gold-light);background:#16090bcc;
+  border:1px solid #c9a44c99;border-radius:999px;
+  padding:9px 15px;cursor:pointer;backdrop-filter:blur(10px);
+}
+#audio-status{
+  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
+  z-index:80;font-size:.72rem;color:#b9a58c;opacity:0;
+  transition:opacity .4s;pointer-events:none;
+}
+
+/* ===== المحتوى ===== */
+#invitation{
+  display:none;opacity:0;transform:translateY(25px);
+  max-width:900px;margin:auto;padding:70px 18px 55px;
+  transition:opacity 1.2s ease,transform 1.2s ease;
+}
+#invitation.show{opacity:1;transform:none}
+.frame{
+  position:relative;padding:55px 28px 42px;
+  background:linear-gradient(180deg,#211113f2,#130b0ceF);
+  border:1px solid var(--gold);
+  box-shadow:0 25px 80px #000b,inset 0 0 80px #c9a44c0b;
+}
+.frame::before,.frame::after{
+  content:"";position:absolute;inset:11px;border:1px solid #c9a44c55;pointer-events:none;
+}
+.corner{position:absolute;z-index:2;color:var(--gold);font-size:26px}
+.c1{top:4px;right:14px}.c2{top:4px;left:14px}
+.c3{bottom:3px;right:14px}.c4{bottom:3px;left:14px}
+.bismillah{text-align:center;font:2rem Amiri;color:var(--gold-light)}
+.guest{text-align:center;min-height:29px;margin-top:10px;color:#f2e6cf}
+.intro{
+  max-width:690px;margin:22px auto;text-align:center;
+  font:1.3rem/2 Amiri;color:#e4d4b8;
+}
+.divider{display:flex;align-items:center;justify-content:center;gap:13px;margin:24px 0}
+.divider::before,.divider::after{content:"";height:1px;width:120px;background:linear-gradient(90deg,transparent,var(--gold))}
+.divider::after{transform:scaleX(-1)}
+.diamond{width:8px;height:8px;background:var(--gold);transform:rotate(45deg)}
+.couple-art{display:block;width:min(310px,82vw);height:175px;margin:8px auto}
+.names{
+  text-align:center;font:700 clamp(3.1rem,9vw,5.4rem)/1.05 Amiri;
+  color:var(--gold-light);text-shadow:0 10px 35px #000;
+}
+.amp{font-size:.58em;color:#f4e8cc;margin:0 8px}
+.quote{text-align:center;font:1.2rem Amiri;color:#d6c4a7;margin-top:10px}
+.details{
+  max-width:700px;margin:34px auto 0;padding:25px 10px;
+  border-top:1px solid #c9a44c55;border-bottom:1px solid #c9a44c55;
+  text-align:center;
+}
+.detail{font:1.25rem Amiri;color:#d7c6aa;margin:12px}
+.detail strong{display:block;color:#fff0cc;font-size:1.55rem}
+.countdown{
+  display:flex;direction:ltr;justify-content:center;gap:12px;
+  flex-wrap:wrap;margin:34px 0;
+}
+.time{
+  min-width:78px;text-align:center;padding:12px 9px;
+  background:linear-gradient(145deg,#4d0d14,#25080c);
+  border:1px solid #c9a44c99;border-radius:5px;box-shadow:0 10px 30px #0007;
+}
+.time span{display:block;font:700 2rem Amiri;color:var(--gold-light)}
+.time small{font-size:.75rem;color:#d7c39d}
+.actions{text-align:center;margin-top:25px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  margin:6px;padding:12px 22px;border:1px solid var(--gold);
+  border-radius:4px;text-decoration:none;color:var(--gold-light);
+  background:#2b0b10cc;transition:.25s;
+}
+.btn:hover{background:var(--gold);color:#241012;transform:translateY(-2px)}
+.pattern{
+  height:34px;max-width:500px;margin:28px auto 0;opacity:.65;
+  background:
+    linear-gradient(45deg,transparent 46%,var(--gold) 47% 53%,transparent 54%) 0 0/20px 20px,
+    linear-gradient(-45deg,transparent 46%,var(--gold) 47% 53%,transparent 54%) 10px 10px/20px 20px;
+}
+.footer{text-align:center;margin-top:25px;font:1.1rem Amiri;color:#a99882}
+
+/* المؤثرات */
+.particle{
+  position:fixed;top:-25px;z-index:10;pointer-events:none;
+  color:var(--gold-light);animation:fall linear forwards;opacity:.8;
+}
+@keyframes fall{
+  from{transform:translateY(-25px) rotate(0)}
+  to{transform:translateY(110vh) translateX(90px) rotate(360deg);opacity:0}
+}
+@media(max-width:600px){
+  #invitation{padding:55px 12px 40px}
+  .frame{padding:43px 15px 35px}
+  .intro{font-size:1.15rem}
+  .bismillah{font-size:1.65rem}
+  .time{min-width:68px}.time span{font-size:1.65rem}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+
+<body>
+
+<!--
+  ==========================================================
+  الصوت:
+  1) الصفحة تحتوي على رابط موسيقى احتياطي يعمل بعد ضغط المستخدم.
+  2) يمكن استبداله بسهولة بملفك:
+     <source src="music/wedding.mp3" type="audio/mpeg">
+  3) المتصفح يمنع التشغيل التلقائي قبل تفاعل المستخدم،
+     لذلك يبدأ الصوت عند الضغط على الظرف — وهذا هو الأسلوب الصحيح.
+  ==========================================================
+-->
+<audio id="bgMusic" preload="auto" loop playsinline>
+  <source src="C:\Users\Pc\Downloads\weddingp\music-w1.mp3" type="audio/mpeg">
+</audio>
+
+<button id="audio-control" type="button" aria-label="تشغيل أو إيقاف الموسيقى">
+  <span id="audio-icon">🔊</span>
+  <span id="audio-label">إيقاف الموسيقى</span>
+</button>
+<div id="audio-status"></div>
+
+<section id="landing">
+  <div class="landing-content">
+    <div class="brand-small">أفراح آل فتحي عبده أحمد</div>
+
+    <div class="envelope-wrapper" id="envelope" role="button" tabindex="0" aria-label="اضغط لفتح الدعوة">
+      <div class="envelope">
+        <div class="envelope-back"></div>
+
+        <div class="envelope-card">
+          <div class="card-content">
+            <div class="family">دعوة زفاف</div>
+            <span class="names">مصطفى & مي</span>
+            <div class="line">بكل الحب نشارككم فرحتنا</div>
+          </div>
+        </div>
+
+        <div class="envelope-front"></div>
+        <div class="envelope-flap"></div>
+
+        <div class="seal">مصطفى<br>&amp;<br>مي</div>
+      </div>
+    </div>
+
+    <div class="open-text">اضغط لفتح الدعوة</div>
+  </div>
+</section>
+
+<main id="invitation">
+  <div class="frame">
+    <span class="corner c1">❖</span>
+    <span class="corner c2">❖</span>
+    <span class="corner c3">❖</span>
+    <span class="corner c4">❖</span>
+
+    <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+    <div class="guest" id="guestName">إلى ضيفنا الكريم</div>
+
+    <p class="intro">
+      بكل الحب والود، وبمناسبة فرحة العمر، تتشرف عائلتا العروسين
+      بدعوتكم لمشاركتنا هذه المناسبة السعيدة، فحضوركم يزيد أفراحنا بهجة.
+    </p>
+
+    <div class="divider">
+      <span class="diamond"></span>
+      <span>فرحة سودانية بطابع أصيل</span>
+      <span class="diamond"></span>
+    </div>
+
+    <!-- رسمة رمزية للجلابية والثوب السوداني -->
+    <svg class="couple-art" viewBox="0 0 310 175" xmlns="http://www.w3.org/2000/svg" aria-label="زخرفة سودانية">
+      <defs>
+        <linearGradient id="goldGradient" x1="0" x2="1">
+          <stop stop-color="#f1dc91"/>
+          <stop offset="1" stop-color="#a77a28"/>
+        </linearGradient>
+      </defs>
+      <path d="M70 153Q67 105 87 67Q101 43 120 46Q138 49 145 69Q158 106 153 153Z"
+            fill="#fbf6ea" stroke="url(#goldGradient)" stroke-width="2"/>
+      <path d="M101 48Q98 28 117 17Q135 28 131 49"
+            fill="#fbf6ea" stroke="url(#goldGradient)" stroke-width="2"/>
+      <path d="M181 153Q175 112 181 80Q187 56 205 47Q225 54 232 81Q238 117 231 153Z"
+            fill="#65121c" stroke="url(#goldGradient)" stroke-width="2"/>
+      <path d="M184 74Q205 93 230 83M182 99Q207 119 232 109M180 125Q205 143 232 133"
+            fill="none" stroke="url(#goldGradient)" stroke-width="2"/>
+      <path d="M145 76Q163 84 181 76" fill="none" stroke="url(#goldGradient)" stroke-width="2"/>
+      <circle cx="116" cy="43" r="5" fill="#5b321f"/>
+      <circle cx="205" cy="47" r="5" fill="#5b321f"/>
+      <g fill="url(#goldGradient)">
+        <circle cx="42" cy="55" r="2"/><circle cx="257" cy="55" r="2"/>
+        <circle cx="56" cy="128" r="2"/><circle cx="250" cy="130" r="2"/>
+      </g>
+    </svg>
+
+    <h1 class="names">مصطفى <span class="amp">&amp;</span> مي</h1>
+    <div class="quote">بارك الله لهما وبارك عليهما وجمع بينهما في خير</div>
+
+    <div class="details">
+      <div class="detail">موعد الاحتفال<strong>الخميس 15 أكتوبر 2026</strong></div>
+      <div class="detail">الساعة<strong>الثامنة مساءً</strong></div>
+      <div class="detail">المكان<strong>صالة ليالي السعد — الخرطوم</strong></div>
+    </div>
+
+    <div class="countdown" id="countdown">
+      <div class="time"><span id="days">00</span><small>يوم</small></div>
+      <div class="time"><span id="hours">00</span><small>ساعة</small></div>
+      <div class="time"><span id="minutes">00</span><small>دقيقة</small></div>
+      <div class="time"><span id="seconds">00</span><small>ثانية</small></div>
+    </div>
+
+    <div class="actions">
+      <a class="btn" href="https://maps.google.com" target="_blank" rel="noopener noreferrer">📍 عرض الموقع</a>
+      <a class="btn" id="attend" href="#" target="_blank" rel="noopener noreferrer">✓ تأكيد الحضور</a>
+      <a class="btn" id="decline" href="#" target="_blank" rel="noopener noreferrer">اعتذار عن الحضور</a>
+    </div>
+
+    <div class="pattern"></div>
+    <div class="footer">وجودكم بيننا هو أجمل هدية لفرحتنا 🤍</div>
+  </div>
+</main>
+
+<div id="particles"></div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   1) اسم المدعو
+   مثال:
+   wedding.html?name=محمد أحمد
+   ========================================================= */
+const params = new URLSearchParams(window.location.search);
+const guest = params.get("name");
+
+document.getElementById("guestName").textContent =
+  guest ? `إلى ضيفنا الكريم: ${guest}` : "إلى ضيفنا الكريم";
+
+/* =========================================================
+   2) واتساب
+   ========================================================= */
+const phone = "249997599917";
+
+const attendMessage = guest
+  ? `السلام عليكم، أنا ${guest} وأؤكد حضوري لحفل زفاف مصطفى ومي. ألف مبروك للعروسين 🌹`
+  : `السلام عليكم، أؤكد حضوري لحفل زفاف مصطفى ومي. ألف مبروك للعروسين 🌹`;
+
+const declineMessage = guest
+  ? `السلام عليكم، أنا ${guest}. أعتذر عن عدم تمكني من حضور حفل زفاف مصطفى ومي، مع خالص التهاني والتبريكات.`
+  : `السلام عليكم، أعتذر عن عدم تمكني من حضور حفل زفاف مصطفى ومي، مع خالص التهاني والتبريكات.`;
+
+document.getElementById("attend").href =
+  `https://wa.me/${phone}?text=${encodeURIComponent(attendMessage)}`;
+
+document.getElementById("decline").href =
+  `https://wa.me/${phone}?text=${encodeURIComponent(declineMessage)}`;
+
+/* =========================================================
+   3) الموسيقى — الإصلاح الأساسي
+   ========================================================= */
+const music = document.getElementById("bgMusic");
+const audioControl = document.getElementById("audio-control");
+const audioIcon = document.getElementById("audio-icon");
+const audioLabel = document.getElementById("audio-label");
+const audioStatus = document.getElementById("audio-status");
+
+let audioReady = false;
+
+function showAudioStatus(message) {
+  audioStatus.textContent = message;
+  audioStatus.style.opacity = "1";
+  clearTimeout(window.audioStatusTimer);
+  window.audioStatusTimer = setTimeout(() => {
+    audioStatus.style.opacity = "0";
+  }, 3000);
+}
+
+music.addEventListener("canplaythrough", () => {
+  audioReady = true;
+});
+
+music.addEventListener("error", () => {
+  audioReady = false;
+  showAudioStatus("تعذر تحميل الموسيقى من الإنترنت");
+  audioControl.style.display = "none";
+});
+
+/*
+  مهم:
+  المتصفحات الحديثة تمنع تشغيل الصوت تلقائياً.
+  لذلك نستدعي play() داخل حدث الضغط على الظرف نفسه.
+*/
+async function startMusic() {
+  try {
+    if (!music.src) return false;
+
+    music.volume = 0.55;
+    await music.play();
+
+    audioReady = true;
+    audioControl.style.display = "flex";
+    audioIcon.textContent = "🔊";
+    audioLabel.textContent = "إيقاف الموسيقى";
+    return true;
+  } catch (error) {
+    console.warn("Audio play blocked:", error);
+    audioControl.style.display = "flex";
+    audioIcon.textContent = "🔇";
+    audioLabel.textContent = "تشغيل الموسيقى";
+    showAudioStatus("اضغط زر الموسيقى لتشغيلها");
+    return false;
+  }
+}
+
+audioControl.addEventListener("click", async () => {
+  if (music.paused) {
+    await startMusic();
+  } else {
+    music.pause();
+    audioIcon.textContent = "🔇";
+    audioLabel.textContent = "تشغيل الموسيقى";
+  }
+});
+
+/* =========================================================
+   4) فتح الظرف
+   ========================================================= */
+let opened = false;
+
+async function openEnvelope() {
+  if (opened) return;
+  opened = true;
+
+  const envelope = document.getElementById("envelope");
+  const landing = document.getElementById("landing");
+  const invitation = document.getElementById("invitation");
+
+  envelope.classList.add("open");
+
+  /*
+    تشغيل الموسيقى هنا مباشرة داخل click event.
+    هذه أهم نقطة حتى يسمح المتصفح بالصوت.
+  */
+  await startMusic();
+
+  setTimeout(() => {
+    landing.style.opacity = "0";
+    landing.style.transform = "scale(1.04)";
+
+    setTimeout(() => {
+      landing.style.display = "none";
+      invitation.style.display = "block";
+
+      requestAnimationFrame(() => {
+        invitation.classList.add("show");
+      });
+
+      startParticles();
+    }, 1000);
+  }, 1300);
+}
+
+document.getElementById("envelope").addEventListener("click", openEnvelope);
+
+document.getElementById("envelope").addEventListener("keydown", event => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    openEnvelope();
+  }
+});
+
+/* =========================================================
+   5) العد التنازلي
+   ========================================================= */
+const weddingDate = new Date(2026, 9, 15, 20, 0, 0).getTime();
+
+function updateCountdown() {
+  const distance = weddingDate - Date.now();
+
+  if (distance <= 0) {
+    document.getElementById("countdown").innerHTML =
+      '<div style="font:700 1.7rem Amiri;color:#f0d98a">تمت الأفراح بفضل الله 🤍</div>';
+    return;
+  }
+
+  const days = Math.floor(distance / 86400000);
+  const hours = Math.floor((distance % 86400000) / 3600000);
+  const minutes = Math.floor((distance % 3600000) / 60000);
+  const seconds = Math.floor((distance % 60000) / 1000);
+
+  document.getElementById("days").textContent = String(days).padStart(2, "0");
+  document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+  document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+  document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* =========================================================
+   6) المؤثرات
+   ========================================================= */
+function startParticles() {
+  const container = document.getElementById("particles");
+  const symbols = ["✦", "✧", "❖", "✿"];
+
+  setInterval(() => {
+    if (document.hidden) return;
+
+    const p = document.createElement("span");
+    p.className = "particle";
+    p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    p.style.left = `${Math.random() * 100}vw`;
+    p.style.fontSize = `${10 + Math.random() * 11}px`;
+    p.style.animationDuration = `${7 + Math.random() * 6}s`;
+
+    container.appendChild(p);
+    setTimeout(() => p.remove(), 14000);
+  }, 900);
+}
+</script>
+</body>
+</html>
